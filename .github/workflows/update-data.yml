@@ -17,13 +17,14 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests msal openpyxl
+        run: pip install requests openpyxl
 
       - name: Fetch data from SharePoint
         env:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           TENANT_ID: ${{ secrets.TENANT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
           SHAREPOINT_FILE_URL: ${{ secrets.SHAREPOINT_FILE_URL }}
         run: python fetch_data.py
 
