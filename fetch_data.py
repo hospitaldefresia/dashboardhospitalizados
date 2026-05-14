@@ -1,4 +1,4 @@
-import os, requests, json
+import os, requests, json, base64
 from openpyxl import load_workbook
 from io import BytesIO
 from datetime import datetime
@@ -8,6 +8,8 @@ TENANT_ID = os.environ["TENANT_ID"]
 CLIENT_SECRET = os.environ["CLIENT_SECRET"]
 REFRESH_TOKEN = os.environ["REFRESH_TOKEN"]
 FILE_URL = os.environ["SHAREPOINT_FILE_URL"]
+GH_PAT = os.environ.get("GH_PAT", "")
+GH_REPO = os.environ.get("GITHUB_REPOSITORY", "")
 
 MESES_VALIDOS = ["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO",
                  "JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"]
@@ -26,11 +28,37 @@ def get_token():
     data = resp.json()
     if "access_token" not in data:
         raise Exception(f"Error autenticando: {data}")
+    new_refresh = data.get("refresh_token")
+    if new_refresh and new_refresh != REFRESH_TOKEN and GH_PAT and GH_REPO:
+        try:
+            update_github_secret("REFRESH_TOKEN", new_refresh)
+            print("✓ Refresh token renovado automáticamente")
+        except Exception as e:
+            print(f"⚠ No se pudo renovar el token en GitHub: {e}")
     return data["access_token"]
+
+def update_github_secret(secret_name, secret_value):
+    headers = {
+        "Authorization": f"token {GH_PAT}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    r = requests.get(f"https://api.github.com/repos/{GH_REPO}/actions/secrets/public-key", headers=headers)
+    r.raise_for_status()
+    key_data = r.json()
+    from base64 import b64encode
+    from nacl import encoding, public
+    pk = public.PublicKey(key_data["key"].encode(), encoding.Base64Encoder)
+    box = public.SealedBox(pk)
+    encrypted = b64encode(box.encrypt(secret_value.encode())).decode()
+    r2 = requests.put(
+        f"https://api.github.com/repos/{GH_REPO}/actions/secrets/{secret_name}",
+        headers=headers,
+        json={"encrypted_value": encrypted, "key_id": key_data["key_id"]}
+    )
+    r2.raise_for_status()
 
 def get_file_content(token):
     headers = {"Authorization": f"Bearer {token}"}
-    import base64
     b64 = base64.urlsafe_b64encode(FILE_URL.encode()).decode().rstrip("=")
     share_token = "u!" + b64
     url = f"https://graph.microsoft.com/v1.0/shares/{share_token}/driveItem/content"
