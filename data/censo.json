@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-05-14 14:57",
+  "actualizado": "2026-05-14 15:33",
   "meses": {
     "MARZO": {
       "dias": [
@@ -2383,5 +2383,84 @@
         "ing_otros_hosp": 0
       }
     }
-  }
+  },
+  "sociosanitarios": [
+    {
+      "nombre": "DANIEL IBACACHE MARQUEZ",
+      "rut": "4934239-K",
+      "edad": "",
+      "fecha_ingreso": "25/05/2021",
+      "dias_hospitalizados": 1815,
+      "sala": "",
+      "cama": "",
+      "procedencia": "4:OTRO ESTABLECIMIENTO",
+      "prevision": ""
+    },
+    {
+      "nombre": "HELIDA CORTEZ SECUTO",
+      "rut": "4270581-0",
+      "edad": "",
+      "fecha_ingreso": "14/12/2022",
+      "dias_hospitalizados": 1247,
+      "sala": "",
+      "cama": "",
+      "procedencia": "4:OTRO ESTABLECIMIENTO",
+      "prevision": ""
+    },
+    {
+      "nombre": "JUAN CASTAÑEDA ALVARADO",
+      "rut": "9545710-K",
+      "edad": "",
+      "fecha_ingreso": "29/12/2024",
+      "dias_hospitalizados": 501,
+      "sala": "",
+      "cama": "",
+      "procedencia": "4:OTRO ESTABLECIMIENTO",
+      "prevision": ""
+    },
+    {
+      "nombre": "TERESITA PATRICIA CARDENAS KAMMEL",
+      "rut": "1116339-1",
+      "edad": "",
+      "fecha_ingreso": "21/11/2025",
+      "dias_hospitalizados": 174,
+      "sala": "",
+      "cama": "",
+      "procedencia": "4:OTRO ESTABLECIMIENTO",
+      "prevision": ""
+    },
+    {
+      "nombre": "JOSE MARCELO URIBE OJEDA",
+      "rut": "4171531-6",
+      "edad": "",
+      "fecha_ingreso": "24/11/2025",
+      "dias_hospitalizados": 171,
+      "sala": "",
+      "cama": "",
+      "procedencia": "4:OTRO ESTABLECIMIENTO",
+      "prevision": ""
+    },
+    {
+      "nombre": "LUCIO ULISES SOTO ALVARADO",
+      "rut": "12538744-6",
+      "edad": "",
+      "fecha_ingreso": "09/02/2026",
+      "dias_hospitalizados": 94,
+      "sala": "",
+      "cama": "",
+      "procedencia": "4:OTRO ESTABLECIMIENTO",
+      "prevision": ""
+    },
+    {
+      "nombre": "JOSE MARTIN OJEDA LEVINERI",
+      "rut": "5051730-6",
+      "edad": "",
+      "fecha_ingreso": "28/02/2026",
+      "dias_hospitalizados": 75,
+      "sala": "",
+      "cama": "",
+      "procedencia": "4:OTRO ESTABLECIMIENTO",
+      "prevision": ""
+    }
+  ]
 }
