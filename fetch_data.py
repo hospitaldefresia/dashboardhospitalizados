@@ -1,5 +1,4 @@
-import os, requests, json, re
-from msal import ConfidentialClientApplication
+import os, requests, json
 from openpyxl import load_workbook
 from io import BytesIO
 from datetime import datetime
@@ -7,50 +6,44 @@ from datetime import datetime
 CLIENT_ID = os.environ["CLIENT_ID"]
 TENANT_ID = os.environ["TENANT_ID"]
 CLIENT_SECRET = os.environ["CLIENT_SECRET"]
+REFRESH_TOKEN = os.environ["REFRESH_TOKEN"]
 FILE_URL = os.environ["SHAREPOINT_FILE_URL"]
 
 MESES_VALIDOS = ["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO",
                  "JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"]
 
 def get_token():
-    app = ConfidentialClientApplication(
-        CLIENT_ID,
-        authority=f"https://login.microsoftonline.com/{TENANT_ID}",
-        client_credential=CLIENT_SECRET
+    resp = requests.post(
+        f"https://login.microsoftonline.com/{TENANT_ID}/oauth2/v2.0/token",
+        data={
+            "client_id": CLIENT_ID,
+            "client_secret": CLIENT_SECRET,
+            "refresh_token": REFRESH_TOKEN,
+            "grant_type": "refresh_token",
+            "scope": "Files.Read offline_access"
+        }
     )
-    result = app.acquire_token_for_client(scopes=["https://graph.microsoft.com/.default"])
-    if "access_token" not in result:
-        raise Exception(f"Error autenticando: {result.get('error_description')}")
-    return result["access_token"]
+    data = resp.json()
+    if "access_token" not in data:
+        raise Exception(f"Error autenticando: {data}")
+    return data["access_token"]
 
 def get_file_content(token):
     headers = {"Authorization": f"Bearer {token}"}
-    # Extraer el driveItem desde la URL compartida
-    share_url = FILE_URL
-    encoded = "u!" + share_url.replace("https://", "").replace("/", "_").replace("?", "_").replace("=", "_").replace("&","_").rstrip("_")
-    
-    # Usar endpoint de shares para acceder al archivo
-    graph_url = f"https://graph.microsoft.com/v1.0/shares/{encoded}/driveItem/content"
-    resp = requests.get(graph_url, headers=headers, allow_redirects=True)
-    
+    import base64
+    b64 = base64.urlsafe_b64encode(FILE_URL.encode()).decode().rstrip("=")
+    share_token = "u!" + b64
+    url = f"https://graph.microsoft.com/v1.0/shares/{share_token}/driveItem/content"
+    resp = requests.get(url, headers=headers, allow_redirects=True)
     if resp.status_code != 200:
-        # Intentar con endpoint alternativo
-        import base64
-        b64 = base64.urlsafe_b64encode(share_url.encode()).decode().rstrip("=")
-        share_token = "u!" + b64
-        graph_url2 = f"https://graph.microsoft.com/v1.0/shares/{share_token}/driveItem/content"
-        resp = requests.get(graph_url2, headers=headers, allow_redirects=True)
-        if resp.status_code != 200:
-            raise Exception(f"Error descargando archivo: {resp.status_code} - {resp.text[:300]}")
-    
+        raise Exception(f"Error descargando: {resp.status_code} - {resp.text[:300]}")
     return resp.content
 
 def parse_mes(ws):
     datos_diarios = []
-    dotacion = 29  # default
+    dotacion = 29
 
     for row in ws.iter_rows(values_only=True):
-        # Buscar dotación de camas
         for cell in row:
             if cell and "DOTACION" in str(cell).upper():
                 idx = list(row).index(cell)
@@ -60,11 +53,9 @@ def parse_mes(ws):
                     except:
                         pass
 
-        # Buscar filas de datos diarios (primera celda es una fecha)
         first = row[0]
         if first is None:
             continue
-        
         fecha = None
         if isinstance(first, datetime):
             fecha = first
@@ -73,7 +64,6 @@ def parse_mes(ws):
                 fecha = datetime.strptime(str(first).strip(), "%d/%m/%Y")
             except:
                 pass
-        
         if fecha is None:
             continue
 
@@ -135,13 +125,11 @@ def parse_mes(ws):
 def main():
     print("Obteniendo token...")
     token = get_token()
-    
-    print("Descargando archivo Excel desde SharePoint...")
+    print("Descargando Excel desde SharePoint...")
     content = get_file_content(token)
-    
     print("Procesando Excel...")
     wb = load_workbook(BytesIO(content), data_only=True)
-    
+
     resultado = {
         "actualizado": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "meses": {}
@@ -150,7 +138,7 @@ def main():
     for sheet_name in wb.sheetnames:
         nombre_upper = sheet_name.strip().upper()
         if nombre_upper in MESES_VALIDOS:
-            print(f"  Procesando hoja: {sheet_name}")
+            print(f"  Procesando: {sheet_name}")
             ws = wb[sheet_name]
             datos = parse_mes(ws)
             if datos:
@@ -160,7 +148,7 @@ def main():
     with open("data/censo.json", "w", encoding="utf-8") as f:
         json.dump(resultado, f, ensure_ascii=False, indent=2)
 
-    print(f"✓ Datos guardados. Meses procesados: {list(resultado['meses'].keys())}")
+    print(f"✓ Listo. Meses: {list(resultado['meses'].keys())}")
 
 if __name__ == "__main__":
     main()
