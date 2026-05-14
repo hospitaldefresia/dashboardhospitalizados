@@ -17,7 +17,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests openpyxl
+        run: pip install requests openpyxl pynacl
 
       - name: Fetch data from SharePoint
         env:
@@ -26,6 +26,7 @@ jobs:
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
           SHAREPOINT_FILE_URL: ${{ secrets.SHAREPOINT_FILE_URL }}
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: python fetch_data.py
 
       - name: Commit and push if changed
