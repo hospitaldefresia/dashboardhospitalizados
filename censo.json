@@ -1,0 +1,95 @@
+# Dashboard Censo Integral — Hospital de Fresia
+
+Dashboard online con actualización automática diaria desde el Excel en SharePoint.
+
+## Arquitectura
+
+```
+Excel en OneDrive (SharePoint)
+    ↓  GitHub Actions lo descarga cada noche (6:00 AM)
+data/censo.json  (se actualiza automáticamente)
+    ↓
+index.html  (dashboard visible en GitHub Pages)
+```
+
+---
+
+## Configuración inicial (una sola vez)
+
+### Paso 1 — Crear repositorio en GitHub
+
+1. Ir a https://github.com y crear cuenta si no tienes
+2. Crear nuevo repositorio: **censo-hospital-fresia**
+3. Marcarlo como **Público**
+4. Subir todos los archivos de este proyecto
+
+### Paso 2 — Activar GitHub Pages
+
+1. En el repositorio → **Settings** → **Pages**
+2. Source: **Deploy from a branch**
+3. Branch: **main** / **/ (root)**
+4. Guardar
+
+El dashboard quedará en: `https://TU_USUARIO.github.io/censo-hospital-fresia`
+
+### Paso 3 — Agregar los secretos de Azure
+
+1. En el repositorio → **Settings** → **Secrets and variables** → **Actions**
+2. Agregar estos 4 secretos con **New repository secret**:
+
+| Nombre | Valor |
+|--------|-------|
+| `CLIENT_ID` | `0b5a8377-1960-460c-98c3-480cd996286c` |
+| `TENANT_ID` | `4b3c2282-844b-4709-8777-b263602d6283` |
+| `CLIENT_SECRET` | `atC8Q~Z1scuRg7exYz.kUVbgMcTXG5yfm4akHb1v` |
+| `SHAREPOINT_FILE_URL` | `https://ssdreloncavi-my.sharepoint.com/:x:/g/personal/direccionhospitalfresia_ssdr_gob_cl/IQCgaNQ0H5h9SIbkVxtqGKzaAbU7pAJiNJX6Fc4Ol89agLo?e=X0knl9` |
+
+### Paso 4 — Dar permisos de escritura a GitHub Actions
+
+1. En el repositorio → **Settings** → **Actions** → **General**
+2. Bajar a **Workflow permissions**
+3. Seleccionar **Read and write permissions**
+4. Guardar
+
+### Paso 5 — Probar manualmente
+
+1. Ir a la pestaña **Actions** del repositorio
+2. Seleccionar **Actualizar datos censo**
+3. Clic en **Run workflow**
+4. Esperar que termine (verde = OK)
+
+---
+
+## Actualización automática
+
+El workflow corre automáticamente **todos los días a las 6:00 AM** (hora servidor, UTC). Ajustable en `.github/workflows/update-data.yml`.
+
+## Agregar nuevos meses
+
+No hay nada que hacer. El script detecta automáticamente cualquier pestaña nueva cuyo nombre sea un mes en español (MAYO, JUNIO, etc.) y la incluye en el dashboard.
+
+## Estructura de archivos
+
+```
+/
+├── index.html                          # Dashboard web
+├── fetch_data.py                       # Script que descarga el Excel
+├── data/
+│   └── censo.json                      # Datos procesados (se actualiza automáticamente)
+└── .github/
+    └── workflows/
+        └── update-data.yml             # Configuración de automatización
+```
+
+---
+
+## Solución de problemas
+
+**El workflow falla con error de autenticación:**
+Verificar que los secretos CLIENT_ID, TENANT_ID y CLIENT_SECRET estén correctos.
+
+**El workflow falla descargando el archivo:**
+El link compartido de SharePoint puede haber expirado. Generar uno nuevo y actualizar el secreto SHAREPOINT_FILE_URL.
+
+**No aparecen datos de un mes:**
+Verificar que la pestaña se llame exactamente con el nombre del mes en mayúsculas (MAYO, JUNIO, etc.) sin espacios adicionales.
