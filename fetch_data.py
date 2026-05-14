@@ -1,7 +1,7 @@
 import os, requests, json, base64
 from openpyxl import load_workbook
 from io import BytesIO
-from datetime import datetime
+from datetime import datetime, date
 
 CLIENT_ID = os.environ["CLIENT_ID"]
 TENANT_ID = os.environ["TENANT_ID"]
@@ -34,14 +34,11 @@ def get_token():
             update_github_secret("REFRESH_TOKEN", new_refresh)
             print("✓ Refresh token renovado automáticamente")
         except Exception as e:
-            print(f"⚠ No se pudo renovar el token en GitHub: {e}")
+            print(f"⚠ No se pudo renovar el token: {e}")
     return data["access_token"]
 
 def update_github_secret(secret_name, secret_value):
-    headers = {
-        "Authorization": f"token {GH_PAT}",
-        "Accept": "application/vnd.github.v3+json"
-    }
+    headers = {"Authorization": f"token {GH_PAT}", "Accept": "application/vnd.github.v3+json"}
     r = requests.get(f"https://api.github.com/repos/{GH_REPO}/actions/secrets/public-key", headers=headers)
     r.raise_for_status()
     key_data = r.json()
@@ -66,6 +63,78 @@ def get_file_content(token):
     if resp.status_code != 200:
         raise Exception(f"Error descargando: {resp.status_code} - {resp.text[:300]}")
     return resp.content
+
+def parse_sociosanitarios(ws):
+    """Lee la hoja DATOS y extrae pacientes con FIJO en columna A (casos sociosanitarios activos)"""
+    casos = []
+    hoy = date.today()
+    header_found = False
+
+    for row in ws.iter_rows(values_only=True):
+        if not row or row[0] is None:
+            continue
+
+        # Detectar fila de encabezado
+        if str(row[0]).strip().upper() == "OTROS":
+            header_found = True
+            continue
+
+        if not header_found:
+            continue
+
+        otros = str(row[0]).strip().upper() if row[0] else ""
+        if otros != "FIJO":
+            continue
+
+        # Extraer datos del paciente
+        def sv(v):
+            return str(v).strip() if v is not None else ""
+
+        ap_paterno = sv(row[1])
+        ap_materno = sv(row[2])
+        nombre = sv(row[3])
+        nombre_completo = f"{nombre} {ap_paterno} {ap_materno}".strip()
+
+        rut = sv(row[5])
+        edad = sv(row[6])
+        procedencia = sv(row[8])
+        prevision = sv(row[9])
+        sala = sv(row[12])
+        cama = sv(row[13])
+
+        # Fecha ingreso
+        fecha_ing_raw = row[14]
+        fecha_ing_str = ""
+        dias_hospitalizados = None
+
+        if fecha_ing_raw:
+            if isinstance(fecha_ing_raw, datetime):
+                fi = fecha_ing_raw.date()
+            else:
+                try:
+                    fi = datetime.strptime(str(fecha_ing_raw).strip(), "%d/%m/%Y").date()
+                except:
+                    fi = None
+            if fi:
+                fecha_ing_str = fi.strftime("%d/%m/%Y")
+                dias_hospitalizados = (hoy - fi).days
+
+        if nombre_completo:
+            casos.append({
+                "nombre": nombre_completo,
+                "rut": rut,
+                "edad": edad,
+                "fecha_ingreso": fecha_ing_str,
+                "dias_hospitalizados": dias_hospitalizados,
+                "sala": sala,
+                "cama": cama,
+                "procedencia": procedencia,
+                "prevision": prevision,
+            })
+
+    # Ordenar por días hospitalizados descendente
+    casos.sort(key=lambda x: x["dias_hospitalizados"] or 0, reverse=True)
+    return casos
 
 def parse_mes(ws):
     datos_diarios = []
@@ -160,23 +229,33 @@ def main():
 
     resultado = {
         "actualizado": datetime.now().strftime("%Y-%m-%d %H:%M"),
-        "meses": {}
+        "meses": {},
+        "sociosanitarios": []
     }
 
     for sheet_name in wb.sheetnames:
         nombre_upper = sheet_name.strip().upper()
+
         if nombre_upper in MESES_VALIDOS:
-            print(f"  Procesando: {sheet_name}")
+            print(f"  Procesando mes: {sheet_name}")
             ws = wb[sheet_name]
             datos = parse_mes(ws)
             if datos:
                 resultado["meses"][nombre_upper] = datos
+
+        elif nombre_upper == "DATOS":
+            print(f"  Procesando casos sociosanitarios...")
+            ws = wb[sheet_name]
+            casos = parse_sociosanitarios(ws)
+            resultado["sociosanitarios"] = casos
+            print(f"  → {len(casos)} casos FIJO encontrados")
 
     os.makedirs("data", exist_ok=True)
     with open("data/censo.json", "w", encoding="utf-8") as f:
         json.dump(resultado, f, ensure_ascii=False, indent=2)
 
     print(f"✓ Listo. Meses: {list(resultado['meses'].keys())}")
+    print(f"✓ Casos sociosanitarios: {len(resultado['sociosanitarios'])}")
 
 if __name__ == "__main__":
     main()
