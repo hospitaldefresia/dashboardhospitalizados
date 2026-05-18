@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: pip install requests openpyxl pynacl
 
-      - name: Fetch data from SharePoint
+      - name: Fetch data from SharePoint and Google Drive
         env:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           TENANT_ID: ${{ secrets.TENANT_ID }}
@@ -27,6 +27,9 @@ jobs:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
           SHAREPOINT_FILE_URL: ${{ secrets.SHAREPOINT_FILE_URL }}
           GH_PAT: ${{ secrets.GH_PAT }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
         run: python fetch_data.py
 
       - name: Commit and push if changed
