@@ -91,113 +91,68 @@ def list_drive_files(token, folder_id):
 def get_cudyr_via_sheets_api(token, file_id):
     headers = {"Authorization": f"Bearer {token}"}
 
-    # Listar hojas disponibles
     meta_url = f"https://sheets.googleapis.com/v4/spreadsheets/{file_id}?fields=sheets.properties"
     meta_resp = requests.get(meta_url, headers=headers)
-    print(f"    Meta status: {meta_resp.status_code}")
     if meta_resp.status_code != 200:
-        print(f"    Meta error: {meta_resp.text[:300]}")
+        print(f"    Meta error {meta_resp.status_code}: {meta_resp.text[:200]}")
         return None
 
     sheets = meta_resp.json().get("sheets", [])
-    sheet_names = [s["properties"]["title"] for s in sheets]
-    print(f"    Hojas: {sheet_names}")
-
-    # Buscar hoja TOTAL MENSUAL
-    total_sheet = None
-    for s in sheets:
-        if "TOTAL" in s["properties"]["title"].upper():
-            total_sheet = s["properties"]["title"]
-            break
-
+    total_sheet = next((s["properties"]["title"] for s in sheets
+                        if "TOTAL" in s["properties"]["title"].upper()), None)
     if not total_sheet:
         print(f"    ⚠ No hay hoja TOTAL MENSUAL")
         return None
 
-    # Leer valores
     encoded = requests.utils.quote(total_sheet)
     url = f"https://sheets.googleapis.com/v4/spreadsheets/{file_id}/values/{encoded}?majorDimension=ROWS"
     resp = requests.get(url, headers=headers)
-    print(f"    Values status: {resp.status_code}")
     if resp.status_code != 200:
-        print(f"    Values error: {resp.text[:300]}")
+        print(f"    Values error {resp.status_code}: {resp.text[:200]}")
         return None
 
     rows = resp.json().get("values", [])
-    print(f"    Filas: {len(rows)}")
 
-    criticos_pct = medios_pct = basicos_pct = None
-    criticos_dias = medios_dias = basicos_dias = total_dias = 0
+    # La hoja tiene múltiples bloques RESUMEN DIARIO (uno por turno).
+    # Cada bloque: fila cabecera con "RESUMEN DIARIO" y columnas A1,A2,A3,B1,B2,B3,C1,C2,C3,D1,D2,D3
+    # La fila siguiente tiene los valores numéricos.
+    # A1+A2+A3 = críticos, B1+B2+B3 = medios, C1+C2+C3 = básicos, D1+D2+D3 = D
+    total_criticos = total_medios = total_basicos = total_d = 0
+    bloques = 0
 
     for i, row in enumerate(rows):
         row_str = ' '.join(str(c) for c in row).upper()
-
-        # Buscar fila RESUMEN DIARIO con los totales
         if 'RESUMEN DIARIO' in row_str and i + 1 < len(rows):
             next_row = rows[i + 1]
-            print(f"    RESUMEN DIARIO fila {i}, siguiente: {next_row}")
-
-        # Buscar porcentajes calculados
-        if '% CUIDADOS CR' in row_str:
-            for cell in row:
-                try:
-                    val = float(str(cell).strip().replace('%','').replace(',','.'))
-                    if 0 < val <= 100:
-                        criticos_pct = round(val, 1)
-                        break
-                except: pass
-
-        if ('% CUIDADOS ME' in row_str or 'CUIDADOS MEDIOS' in row_str) and 'CR' not in row_str:
-            for cell in row:
-                try:
-                    val = float(str(cell).strip().replace('%','').replace(',','.'))
-                    if 0 < val <= 100:
-                        medios_pct = round(val, 1)
-                        break
-                except: pass
-
-        if '% CUIDADOS B' in row_str or 'CUIDADOS BASICOS' in row_str or 'CUIDADOS BÁS' in row_str:
-            for cell in row:
-                try:
-                    val = float(str(cell).strip().replace('%','').replace(',','.'))
-                    if 0 < val <= 100:
-                        basicos_pct = round(val, 1)
-                        break
-                except: pass
-
-        # Buscar totales de días (fila con TOTAL y varios números)
-        if 'TOTAL' in row_str and len(row) > 5:
             nums = []
-            for cell in row:
+            for cell in next_row:
                 try:
-                    v = int(str(cell).strip())
-                    if v > 0:
-                        nums.append(v)
-                except: pass
-            if len(nums) >= 3:
-                criticos_dias, medios_dias, basicos_dias = nums[0], nums[1], nums[2]
-                total_dias = sum(nums[:3])
-                print(f"    Totales: C={criticos_dias} M={medios_dias} B={basicos_dias} T={total_dias}")
+                    nums.append(int(str(cell).strip()))
+                except:
+                    pass
+            if len(nums) >= 9:
+                total_criticos += nums[0] + nums[1] + nums[2]
+                total_medios   += nums[3] + nums[4] + nums[5]
+                total_basicos  += nums[6] + nums[7] + nums[8]
+                if len(nums) >= 12:
+                    total_d += nums[9] + nums[10] + nums[11]
+                bloques += 1
 
-    # Calcular porcentajes si no vienen ya calculados
-    if criticos_pct is None and total_dias > 0:
-        criticos_pct = round(criticos_dias / total_dias * 100, 1)
-        medios_pct   = round(medios_dias   / total_dias * 100, 1)
-        basicos_pct  = round(basicos_dias  / total_dias * 100, 1)
-        print(f"    Calculados: C={criticos_pct}% M={medios_pct}% B={basicos_pct}%")
+    print(f"    Bloques: {bloques} | C={total_criticos} M={total_medios} B={total_basicos} D={total_d}")
 
-    if criticos_pct is None:
-        print(f"    ⚠ No se pudieron calcular porcentajes")
+    total_pacientes = total_criticos + total_medios + total_basicos + total_d
+    if total_pacientes == 0:
+        print(f"    ⚠ Sin datos suficientes")
         return None
 
     return {
-        "criticos_pct":  criticos_pct,
-        "medios_pct":    medios_pct or 0,
-        "basicos_pct":   basicos_pct or 0,
-        "total_dias":    total_dias,
-        "criticos_dias": criticos_dias,
-        "medios_dias":   medios_dias,
-        "basicos_dias":  basicos_dias,
+        "criticos_pct":  round(total_criticos / total_pacientes * 100, 1),
+        "medios_pct":    round(total_medios   / total_pacientes * 100, 1),
+        "basicos_pct":   round(total_basicos  / total_pacientes * 100, 1),
+        "total_dias":    total_pacientes,
+        "criticos_dias": total_criticos,
+        "medios_dias":   total_medios,
+        "basicos_dias":  total_basicos,
     }
 
 def extract_month_from_name(name):
