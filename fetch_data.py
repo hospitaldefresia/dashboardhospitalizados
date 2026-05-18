@@ -127,20 +127,11 @@ def get_cudyr_via_sheets_api(token, file_id):
     total_criticos = total_medios = total_basicos = total_d = 0
     bloques = 0
 
-    # Debug: mostrar primeras 5 líneas y buscar RESUMEN
-    print(f"    Primeras lineas CSV:")
-    for idx, l in enumerate(lines[:5]):
-        print(f"      {idx}: {repr(l[:80])}")
-    for idx, l in enumerate(lines):
-        if 'RESUMEN' in l.upper():
-            print(f"      RESUMEN en linea {idx}: {repr(l[:80])}")
-            if idx+1 < len(lines):
-                print(f"      Siguiente: {repr(lines[idx+1][:80])}")
-            break
-
+    # La hoja TOTAL MENSUAL tiene UNA fila "RESUMEN MENSUAL" con los totales acumulados
+    # Estructura: RESUMEN MENSUAL,,,A1,A2,A3,B1,B2,B3,C1,C2,C3,D1,D2,D3
+    # Fila datos:                  ,,,n, n, n, n, n, n, n, n, n, n, n, n
     for i, line in enumerate(lines):
-        line_up = line.upper()
-        if 'RESUMEN DIARIO' in line_up and i + 1 < len(lines):
+        if 'RESUMEN MENSUAL' in line.upper() and i + 1 < len(lines):
             next_line = lines[i + 1]
             cols = next_line.split(',')
             nums = []
@@ -150,13 +141,15 @@ def get_cudyr_via_sheets_api(token, file_id):
                     nums.append(int(cell))
                 except:
                     pass
-            if len(nums) >= 9:
-                total_criticos += nums[0] + nums[1] + nums[2]
-                total_medios   += nums[3] + nums[4] + nums[5]
-                total_basicos  += nums[6] + nums[7] + nums[8]
-                if len(nums) >= 12:
-                    total_d += nums[9] + nums[10] + nums[11]
-                bloques += 1
+            # Los primeros 3 son celdas vacías (0), los datos reales son del índice 3 en adelante
+            # pero como son 0, igual funciona: A1+A2+A3, B1+B2+B3, C1+C2+C3, D1+D2+D3
+            if len(nums) >= 12:
+                total_criticos = nums[0] + nums[1] + nums[2]
+                total_medios   = nums[3] + nums[4] + nums[5]
+                total_basicos  = nums[6] + nums[7] + nums[8]
+                total_d        = nums[9] + nums[10] + nums[11]
+                bloques        = 1
+                break
 
     print(f"    Bloques: {bloques} | C={total_criticos} M={total_medios} B={total_basicos} D={total_d}")
 
