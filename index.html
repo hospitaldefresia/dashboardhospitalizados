@@ -643,19 +643,40 @@ function renderCUDYR() {
     }
   });
 
-  // Gráfico línea críticos
-  destroyChart('cudyrCrit');
-  charts.cudyrCrit = new Chart(document.getElementById('ch-cudyr-criticos'), {
+  // Gráfico línea comparativo
+  destroyChart('cudyrLineas');
+  charts.cudyrLineas = new Chart(document.getElementById('ch-cudyr-lineas'), {
     type: 'line',
     data: {
       labels,
-      datasets: [{ label: '% Críticos', data: meses.map(m => cudyr[m].criticos_pct),
-        borderColor: '#C75B3C', backgroundColor: 'rgba(199,91,60,0.08)',
-        fill: true, tension: 0.3, pointRadius: 5, borderWidth: 2 }]
+      datasets: [
+        {
+          label: '% Críticos (A)',
+          data: meses.map(m => cudyr[m].criticos_pct),
+          borderColor: '#C75B3C', backgroundColor: 'rgba(199,91,60,0.08)',
+          fill: false, tension: 0.3, pointRadius: 5, borderWidth: 2.5
+        },
+        {
+          label: '% Medios (B)',
+          data: meses.map(m => cudyr[m].medios_pct),
+          borderColor: '#E67E22', backgroundColor: 'rgba(230,126,34,0.08)',
+          fill: false, tension: 0.3, pointRadius: 5, borderWidth: 2.5
+        },
+        {
+          label: '% Básicos (C)',
+          data: meses.map(m => cudyr[m].basicos_pct),
+          borderColor: '#5FAA52', backgroundColor: 'rgba(95,170,82,0.08)',
+          fill: false, tension: 0.3, pointRadius: 5, borderWidth: 2.5
+        }
+      ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `Críticos: ${c.raw}%` } } },
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.raw}%` } }
+      },
       scales: {
         y: { min: 0, max: 100, grid: { color: '#F3F4F6' }, ticks: { callback: v => v + '%', font: { size: 11 } } },
         x: { grid: { display: false }, ticks: { font: { size: 12 } } }
