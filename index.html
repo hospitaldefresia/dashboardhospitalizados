@@ -125,6 +125,7 @@
           <div style="display:flex;gap:6px;">
             <span class="chip active" id="vista-mes" onclick="setVista('mes')">Por mes</span>
             <span class="chip" id="vista-anual" onclick="setVista('anual')">Visión anual</span>
+            <span class="chip" id="vista-cudyr" onclick="setVista('cudyr')">CUDYR</span>
             <span class="chip" id="vista-ss" onclick="setVista('ss')">Casos sociosanitarios</span>
           </div>
         </div>
@@ -209,6 +210,41 @@
       </div>
     </div>
 
+
+    <div id="panel-cudyr" class="panel">
+      <div class="kpi-row" id="kpis-cudyr"></div>
+      <div class="grid grid-2" style="margin-bottom:16px;">
+        <div class="card" style="grid-column:1/-1;">
+          <h3>Distribución CUDYR mensual — % por categoría de cuidado</h3>
+          <div class="desc">Porcentaje de días-cama según categoría: Críticos (A), Medios (B) y Básicos (C). Fuente: CUDYR Hospitalización.</div>
+          <div class="chart-box tall"><canvas id="ch-cudyr-barras" role="img" aria-label="CUDYR por mes"></canvas></div>
+        </div>
+      </div>
+      <div class="grid grid-2" style="margin-bottom:16px;">
+        <div class="card">
+          <h3>Evolución cuidados críticos</h3>
+          <div class="desc">% de días en categoría A (cuidados críticos) mes a mes.</div>
+          <div class="chart-box sm"><canvas id="ch-cudyr-criticos" role="img" aria-label="Críticos mensual"></canvas></div>
+        </div>
+        <div class="card">
+          <h3>Detalle por mes</h3>
+          <div class="desc">Resumen numérico CUDYR por mes disponible.</div>
+          <div style="overflow-x:auto;">
+            <table class="data" id="tabla-cudyr">
+              <thead><tr>
+                <th>Mes</th>
+                <th class="num">% Críticos (A)</th>
+                <th class="num">% Medios (B)</th>
+                <th class="num">% Básicos (C)</th>
+                <th class="num">Total días</th>
+              </tr></thead>
+              <tbody id="tabla-cudyr-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="panel-ss" class="panel">
       <div class="kpi-row" id="kpis-ss"></div>
       <div class="grid" style="margin-bottom:16px;">
@@ -273,12 +309,15 @@ function setVista(v) {
   vistaActual = v;
   document.getElementById('vista-mes').classList.toggle('active', v === 'mes');
   document.getElementById('vista-anual').classList.toggle('active', v === 'anual');
+  document.getElementById('vista-cudyr').classList.toggle('active', v === 'cudyr');
   document.getElementById('vista-ss').classList.toggle('active', v === 'ss');
   document.getElementById('panel-mes').classList.toggle('active', v === 'mes');
   document.getElementById('panel-anual').classList.toggle('active', v === 'anual');
+  document.getElementById('panel-cudyr').classList.toggle('active', v === 'cudyr');
   document.getElementById('panel-ss').classList.toggle('active', v === 'ss');
   document.getElementById('grupo-mes').style.display = v === 'mes' ? 'flex' : 'none';
   if (v === 'ss') renderSS();
+  if (v === 'cudyr') renderCUDYR();
 }
 
 function selMes(mes) {
@@ -539,6 +578,102 @@ function renderAnual(meses) {
       plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
       scales:{y:{beginAtZero:true,grid:{color:'#F3F4F6'},ticks:{font:{size:11}}},x:{grid:{display:false},ticks:{font:{size:12}}}}}
   });
+}
+
+
+function renderCUDYR() {
+  const cudyr = datos.cudyr || {};
+  const meses = MESES_ORDEN.filter(m => cudyr[m]);
+
+  if (meses.length === 0) {
+    document.getElementById('kpis-cudyr').innerHTML = '<p style="color:var(--muted);padding:20px;">No hay datos CUDYR disponibles aún.</p>';
+    return;
+  }
+
+  const ultimo = cudyr[meses[meses.length - 1]];
+  const promCriticos = Math.round(meses.reduce((a,m) => a + cudyr[m].criticos_pct, 0) / meses.length * 10) / 10;
+
+  document.getElementById('kpis-cudyr').innerHTML = `
+    <div class="kpi accent">
+      <div class="kpi-label">% Críticos último mes</div>
+      <div class="kpi-value">${ultimo.criticos_pct}%</div>
+      <div class="kpi-sub">Cuidados categoría A</div>
+    </div>
+    <div class="kpi warn">
+      <div class="kpi-label">% Medios último mes</div>
+      <div class="kpi-value">${ultimo.medios_pct}%</div>
+      <div class="kpi-sub">Cuidados categoría B</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-label">% Básicos último mes</div>
+      <div class="kpi-value">${ultimo.basicos_pct}%</div>
+      <div class="kpi-sub">Cuidados categoría C</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Prom. críticos YTD</div>
+      <div class="kpi-value">${promCriticos}%</div>
+      <div class="kpi-sub">Promedio ${meses.length} meses</div>
+    </div>
+  `;
+
+  const labels = meses.map(m => m.charAt(0) + m.slice(1,3).toLowerCase());
+
+  // Gráfico barras apiladas
+  destroyChart('cudyrBar');
+  charts.cudyrBar = new Chart(document.getElementById('ch-cudyr-barras'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Críticos (A)', data: meses.map(m => cudyr[m].criticos_pct), backgroundColor: '#C75B3C', borderRadius: 3 },
+        { label: 'Medios (B)',   data: meses.map(m => cudyr[m].medios_pct),   backgroundColor: '#E67E22', borderRadius: 3 },
+        { label: 'Básicos (C)', data: meses.map(m => cudyr[m].basicos_pct),  backgroundColor: '#5FAA52', borderRadius: 3 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.raw}%` } }
+      },
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { font: { size: 12 } } },
+        y: { stacked: true, min: 0, max: 100, grid: { color: '#F3F4F6' },
+          ticks: { callback: v => v + '%', font: { size: 11 } } }
+      }
+    }
+  });
+
+  // Gráfico línea críticos
+  destroyChart('cudyrCrit');
+  charts.cudyrCrit = new Chart(document.getElementById('ch-cudyr-criticos'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{ label: '% Críticos', data: meses.map(m => cudyr[m].criticos_pct),
+        borderColor: '#C75B3C', backgroundColor: 'rgba(199,91,60,0.08)',
+        fill: true, tension: 0.3, pointRadius: 5, borderWidth: 2 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `Críticos: ${c.raw}%` } } },
+      scales: {
+        y: { min: 0, max: 100, grid: { color: '#F3F4F6' }, ticks: { callback: v => v + '%', font: { size: 11 } } },
+        x: { grid: { display: false }, ticks: { font: { size: 12 } } }
+      }
+    }
+  });
+
+  // Tabla detalle
+  document.getElementById('tabla-cudyr-body').innerHTML = meses.map(m => {
+    const d = cudyr[m];
+    return `<tr>
+      <td>${m.charAt(0)+m.slice(1).toLowerCase()}</td>
+      <td class="num" style="color:#C75B3C;font-weight:600">${d.criticos_pct}%</td>
+      <td class="num" style="color:#E67E22;font-weight:600">${d.medios_pct}%</td>
+      <td class="num" style="color:#5FAA52;font-weight:600">${d.basicos_pct}%</td>
+      <td class="num">${d.total_dias || '—'}</td>
+    </tr>`;
+  }).join('');
 }
 
 
