@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-05-18 16:49",
+  "actualizado": "2026-05-18 20:53",
   "meses": {
     "MARZO": {
       "dias": [
@@ -2462,5 +2462,6 @@
       "procedencia": "4:OTRO ESTABLECIMIENTO",
       "prevision": ""
     }
-  ]
+  ],
+  "cudyr": {}
 }
