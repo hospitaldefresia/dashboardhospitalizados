@@ -91,6 +91,7 @@ def list_drive_files(token, folder_id):
 def get_cudyr_via_sheets_api(token, file_id):
     headers = {"Authorization": f"Bearer {token}"}
 
+    # Obtener el gid de la hoja TOTAL MENSUAL
     meta_url = f"https://sheets.googleapis.com/v4/spreadsheets/{file_id}?fields=sheets.properties"
     meta_resp = requests.get(meta_url, headers=headers)
     if meta_resp.status_code != 200:
@@ -98,36 +99,44 @@ def get_cudyr_via_sheets_api(token, file_id):
         return None
 
     sheets = meta_resp.json().get("sheets", [])
-    total_sheet = next((s["properties"]["title"] for s in sheets
-                        if "TOTAL" in s["properties"]["title"].upper()), None)
-    if not total_sheet:
+    gid = None
+    for s in sheets:
+        if "TOTAL" in s["properties"]["title"].upper():
+            gid = s["properties"]["sheetId"]
+            break
+
+    if gid is None:
         print(f"    ⚠ No hay hoja TOTAL MENSUAL")
         return None
 
-    encoded = requests.utils.quote(total_sheet)
-    url = f"https://sheets.googleapis.com/v4/spreadsheets/{file_id}/values/{encoded}?majorDimension=ROWS"
-    resp = requests.get(url, headers=headers)
+    # Exportar como CSV (más confiable que la Sheets API para leer valores)
+    export_url = f"https://docs.google.com/spreadsheets/d/{file_id}/export?format=csv&gid={gid}"
+    resp = requests.get(export_url, headers=headers)
     if resp.status_code != 200:
-        print(f"    Values error {resp.status_code}: {resp.text[:200]}")
+        print(f"    Export error {resp.status_code}")
         return None
 
-    rows = resp.json().get("values", [])
+    # Parsear CSV línea por línea
+    try:
+        text = resp.content.decode('utf-8')
+    except:
+        text = resp.content.decode('latin-1')
 
-    # La hoja tiene múltiples bloques RESUMEN DIARIO (uno por turno).
-    # Cada bloque: fila cabecera con "RESUMEN DIARIO" y columnas A1,A2,A3,B1,B2,B3,C1,C2,C3,D1,D2,D3
-    # La fila siguiente tiene los valores numéricos.
-    # A1+A2+A3 = críticos, B1+B2+B3 = medios, C1+C2+C3 = básicos, D1+D2+D3 = D
+    lines = text.replace('\r\n', '\n').replace('\r', '\n').split('\n')
+
     total_criticos = total_medios = total_basicos = total_d = 0
     bloques = 0
 
-    for i, row in enumerate(rows):
-        row_str = ' '.join(str(c) for c in row).upper()
-        if 'RESUMEN DIARIO' in row_str and i + 1 < len(rows):
-            next_row = rows[i + 1]
+    for i, line in enumerate(lines):
+        line_up = line.upper()
+        if 'RESUMEN DIARIO' in line_up and i + 1 < len(lines):
+            next_line = lines[i + 1]
+            cols = next_line.split(',')
             nums = []
-            for cell in next_row:
+            for cell in cols:
+                cell = cell.strip().strip('"')
                 try:
-                    nums.append(int(str(cell).strip()))
+                    nums.append(int(cell))
                 except:
                     pass
             if len(nums) >= 9:
