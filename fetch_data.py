@@ -144,10 +144,12 @@ def get_cudyr_via_sheets_api(token, file_id):
             # Los primeros 3 son celdas vacías (0), los datos reales son del índice 3 en adelante
             # pero como son 0, igual funciona: A1+A2+A3, B1+B2+B3, C1+C2+C3, D1+D2+D3
             if len(nums) >= 12:
-                total_criticos = nums[0] + nums[1] + nums[2]
-                total_medios   = nums[3] + nums[4] + nums[5]
-                total_basicos  = nums[6] + nums[7] + nums[8]
-                total_d        = nums[9] + nums[10] + nums[11]
+                # A1+A2+A3+B1+B2 = críticos
+                # B3+C1+C2       = medios
+                # C3+D1+D2+D3    = básicos
+                total_criticos = nums[0] + nums[1] + nums[2] + nums[3] + nums[4]
+                total_medios   = nums[5] + nums[6] + nums[7]
+                total_basicos  = nums[8] + nums[9] + nums[10] + nums[11]
                 bloques        = 1
                 break
 
