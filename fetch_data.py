@@ -127,6 +127,17 @@ def get_cudyr_via_sheets_api(token, file_id):
     total_criticos = total_medios = total_basicos = total_d = 0
     bloques = 0
 
+    # Debug: mostrar primeras 5 líneas y buscar RESUMEN
+    print(f"    Primeras lineas CSV:")
+    for idx, l in enumerate(lines[:5]):
+        print(f"      {idx}: {repr(l[:80])}")
+    for idx, l in enumerate(lines):
+        if 'RESUMEN' in l.upper():
+            print(f"      RESUMEN en linea {idx}: {repr(l[:80])}")
+            if idx+1 < len(lines):
+                print(f"      Siguiente: {repr(lines[idx+1][:80])}")
+            break
+
     for i, line in enumerate(lines):
         line_up = line.upper()
         if 'RESUMEN DIARIO' in line_up and i + 1 < len(lines):
