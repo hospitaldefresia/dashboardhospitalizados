@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-05-18 23:09",
+  "actualizado": "2026-05-18 23:15",
   "meses": {
     "MARZO": {
       "dias": [
@@ -2465,49 +2465,49 @@
   ],
   "cudyr": {
     "MAYO": {
-      "criticos_pct": 0.0,
-      "medios_pct": 1.5,
-      "basicos_pct": 87.1,
+      "criticos_pct": 1.5,
+      "medios_pct": 78.2,
+      "basicos_pct": 20.3,
       "total_dias": 340,
-      "criticos_dias": 0,
-      "medios_dias": 5,
-      "basicos_dias": 296
+      "criticos_dias": 5,
+      "medios_dias": 266,
+      "basicos_dias": 69
     },
     "ABRIL": {
-      "criticos_pct": 0.0,
-      "medios_pct": 3.0,
-      "basicos_pct": 83.6,
+      "criticos_pct": 3.0,
+      "medios_pct": 75.2,
+      "basicos_pct": 21.9,
       "total_dias": 640,
-      "criticos_dias": 0,
-      "medios_dias": 19,
-      "basicos_dias": 535
+      "criticos_dias": 19,
+      "medios_dias": 481,
+      "basicos_dias": 140
     },
     "MARZO": {
-      "criticos_pct": 0.0,
-      "medios_pct": 3.1,
-      "basicos_pct": 83.7,
+      "criticos_pct": 3.1,
+      "medios_pct": 75.6,
+      "basicos_pct": 21.3,
       "total_dias": 521,
-      "criticos_dias": 0,
-      "medios_dias": 16,
-      "basicos_dias": 436
+      "criticos_dias": 16,
+      "medios_dias": 394,
+      "basicos_dias": 111
     },
     "FEBRERO": {
-      "criticos_pct": 0.2,
-      "medios_pct": 4.7,
-      "basicos_pct": 76.9,
+      "criticos_pct": 4.8,
+      "medios_pct": 71.3,
+      "basicos_pct": 23.8,
       "total_dias": 516,
-      "criticos_dias": 1,
-      "medios_dias": 24,
-      "basicos_dias": 397
+      "criticos_dias": 25,
+      "medios_dias": 368,
+      "basicos_dias": 123
     },
     "ENERO": {
-      "criticos_pct": 0.0,
-      "medios_pct": 1.8,
-      "basicos_pct": 81.0,
+      "criticos_pct": 1.8,
+      "medios_pct": 76.1,
+      "basicos_pct": 22.0,
       "total_dias": 658,
-      "criticos_dias": 0,
-      "medios_dias": 12,
-      "basicos_dias": 533
+      "criticos_dias": 12,
+      "medios_dias": 501,
+      "basicos_dias": 145
     }
   }
 }
