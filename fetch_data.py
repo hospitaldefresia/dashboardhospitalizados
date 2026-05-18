@@ -16,10 +16,9 @@ G_CLIENT_ID     = os.environ["GOOGLE_CLIENT_ID"]
 G_CLIENT_SECRET = os.environ["GOOGLE_CLIENT_SECRET"]
 G_REFRESH_TOKEN = os.environ["GOOGLE_REFRESH_TOKEN"]
 
-# Carpeta CUDYR 2026
 CUDYR_2026_FOLDER = "1DdnURFrLf9pSX67J1WzsCDLmOUIQu0D5"
 
-# ── GitHub (auto-renovación tokens) ───────────────────────────────────
+# ── GitHub ─────────────────────────────────────────────────────────────
 GH_PAT  = os.environ.get("GH_PAT", "")
 GH_REPO = os.environ.get("GITHUB_REPOSITORY", "")
 
@@ -31,9 +30,6 @@ MESES_ES = {
     "julio":7,"agosto":8,"septiembre":9,"octubre":10,"noviembre":11,"diciembre":12
 }
 
-# ══════════════════════════════════════════════════════════════════════
-# MICROSOFT TOKEN
-# ══════════════════════════════════════════════════════════════════════
 def get_ms_token():
     resp = requests.post(
         f"https://login.microsoftonline.com/{TENANT_ID}/oauth2/v2.0/token",
@@ -57,9 +53,6 @@ def get_ms_token():
             print(f"⚠ No se pudo renovar MS token: {e}")
     return data["access_token"]
 
-# ══════════════════════════════════════════════════════════════════════
-# GOOGLE TOKEN
-# ══════════════════════════════════════════════════════════════════════
 def get_google_token():
     resp = requests.post(
         "https://oauth2.googleapis.com/token",
@@ -73,11 +66,9 @@ def get_google_token():
     data = resp.json()
     if "access_token" not in data:
         raise Exception(f"Error Google auth: {data}")
+    print(f"  Google token OK, scope: {data.get('scope','?')}")
     return data["access_token"]
 
-# ══════════════════════════════════════════════════════════════════════
-# GITHUB SECRETS
-# ══════════════════════════════════════════════════════════════════════
 def update_github_secret(secret_name, secret_value):
     headers = {"Authorization": f"token {GH_PAT}", "Accept": "application/vnd.github.v3+json"}
     r = requests.get(f"https://api.github.com/repos/{GH_REPO}/actions/secrets/public-key", headers=headers)
@@ -95,9 +86,6 @@ def update_github_secret(secret_name, secret_value):
     )
     r2.raise_for_status()
 
-# ══════════════════════════════════════════════════════════════════════
-# SHAREPOINT — descargar Excel censo
-# ══════════════════════════════════════════════════════════════════════
 def get_sharepoint_file(token):
     headers = {"Authorization": f"Bearer {token}"}
     b64 = base64.urlsafe_b64encode(FILE_URL.encode()).decode().rstrip("=")
@@ -107,100 +95,67 @@ def get_sharepoint_file(token):
         raise Exception(f"Error descargando Excel: {resp.status_code} - {resp.text[:300]}")
     return resp.content
 
-# ══════════════════════════════════════════════════════════════════════
-# GOOGLE DRIVE — listar archivos CUDYR y leer TOTAL MENSUAL
-# ══════════════════════════════════════════════════════════════════════
 def list_drive_files(token, folder_id):
     headers = {"Authorization": f"Bearer {token}"}
     url = f"https://www.googleapis.com/drive/v3/files?q='{folder_id}'+in+parents+and+mimeType='application/vnd.google-apps.spreadsheet'&fields=files(id,name)&pageSize=50"
     resp = requests.get(url, headers=headers)
+    print(f"  Drive list status: {resp.status_code}")
+    if resp.status_code != 200:
+        print(f"  Drive error: {resp.text[:200]}")
     resp.raise_for_status()
     return resp.json().get("files", [])
 
-def export_sheet_as_csv(token, file_id, sheet_name="TOTAL MENSUAL"):
-    """Exporta una hoja específica como CSV usando la Sheets API"""
-    headers = {"Authorization": f"Bearer {token}"}
-    # Primero obtener el gid de la hoja
-    meta_url = f"https://sheets.googleapis.com/v4/spreadsheets/{file_id}?fields=sheets.properties"
-    meta = requests.get(meta_url, headers=headers).json()
-    
-    gid = None
-    for sheet in meta.get("sheets", []):
-        props = sheet.get("properties", {})
-        if props.get("title", "").upper() == sheet_name.upper():
-            gid = props.get("sheetId")
-            break
-    
-    if gid is None:
-        return None
-    
-    # Exportar como CSV
-    export_url = f"https://docs.google.com/spreadsheets/d/{file_id}/export?format=csv&gid={gid}"
-    resp = requests.get(export_url, headers=headers)
-    if resp.status_code != 200:
-        return None
-    return resp.text
-
-def parse_cudyr_total_mensual(csv_text):
-    """Extrae % cuidados críticos, medios y básicos del TOTAL MENSUAL"""
-    if not csv_text:
-        return None
-    
-    lines = csv_text.split('\n')
-    
-    criticos = medios = basicos = total_pacientes = 0
-    
-    for i, line in enumerate(lines):
-        # Buscar fila con totales: busca patrones de números en filas con encabezados de categoría
-        # La fila de resumen tiene: A1,A2,A3 (criticos), B1,B2,B3 (medios), C1,C2,C3 (basicos)
-        if 'TOTAL MENSUAL' in line.upper() or ('% CUIDADOS' in line.upper()):
-            # Buscar en líneas siguientes
-            for j in range(i, min(i+10, len(lines))):
-                cols = lines[j].split(',')
-                # Buscar línea con % Críticos
-                line_up = lines[j].upper()
-                if 'CRÍT' in line_up or 'CRITI' in line_up or 'CRÍTICOS' in line_up:
-                    nums = [c.strip().rstrip('%') for c in cols if c.strip().rstrip('%').replace('.','').replace(',','').isdigit() or (c.strip().endswith('%') and c.strip()[:-1].replace('.','').isdigit())]
-                    if nums:
-                        try: criticos = float(nums[0])
-                        except: pass
-                if 'MEDIOS' in line_up or 'MEDIO' in line_up:
-                    nums = [c.strip().rstrip('%') for c in cols if c.strip().rstrip('%').replace('.','').isdigit() or (c.strip().endswith('%') and c.strip()[:-1].replace('.','').isdigit())]
-                    if nums:
-                        try: medios = float(nums[0])
-                        except: pass
-                if 'BÁSIC' in line_up or 'BASIC' in line_up or 'BÁSICOS' in line_up:
-                    nums = [c.strip().rstrip('%') for c in cols if c.strip().rstrip('%').replace('.','').isdigit() or (c.strip().endswith('%') and c.strip()[:-1].replace('.','').isdigit())]
-                    if nums:
-                        try: basicos = float(nums[0])
-                        except: pass
-
-    # Si no encontramos con el método anterior, usar Sheets API directamente
-    return None  # Señal para usar método alternativo
-
 def get_cudyr_via_sheets_api(token, file_id):
-    """Usa Sheets API para leer los valores directamente"""
     headers = {"Authorization": f"Bearer {token}"}
-    
-    # Leer el rango donde está el resumen mensual
-    # Basado en la estructura vista: buscar en toda la hoja TOTAL MENSUAL
-    url = f"https://sheets.googleapis.com/v4/spreadsheets/{file_id}/values/TOTAL%20MENSUAL?majorDimension=ROWS"
-    resp = requests.get(url, headers=headers)
-    if resp.status_code != 200:
+
+    # Primero listar las hojas disponibles
+    meta_url = f"https://sheets.googleapis.com/v4/spreadsheets/{file_id}?fields=sheets.properties"
+    meta_resp = requests.get(meta_url, headers=headers)
+    print(f"    Meta status: {meta_resp.status_code}")
+    if meta_resp.status_code != 200:
+        print(f"    Meta error: {meta_resp.text[:300]}")
         return None
-    
+
+    sheets = meta_resp.json().get("sheets", [])
+    sheet_names = [s["properties"]["title"] for s in sheets]
+    print(f"    Hojas disponibles: {sheet_names}")
+
+    # Buscar hoja TOTAL MENSUAL
+    total_sheet = None
+    for s in sheets:
+        if "TOTAL" in s["properties"]["title"].upper():
+            total_sheet = s["properties"]["title"]
+            break
+
+    if not total_sheet:
+        print(f"    ⚠ No se encontró hoja TOTAL MENSUAL")
+        return None
+
+    # Leer valores
+    encoded_sheet = requests.utils.quote(total_sheet)
+    url = f"https://sheets.googleapis.com/v4/spreadsheets/{file_id}/values/{encoded_sheet}?majorDimension=ROWS"
+    resp = requests.get(url, headers=headers)
+    print(f"    Sheets API status: {resp.status_code}")
+    if resp.status_code != 200:
+        print(f"    Error: {resp.text[:300]}")
+        return None
+
     rows = resp.json().get("values", [])
-    
+    print(f"    Filas obtenidas: {len(rows)}")
+
     criticos_pct = medios_pct = basicos_pct = None
-    total_dias = 0
-    criticos_dias = medios_dias = basicos_dias = 0
-    
+    total_dias = criticos_dias = medios_dias = basicos_dias = 0
+
     for i, row in enumerate(rows):
         row_str = ' '.join(str(c) for c in row).upper()
-        
-        # Buscar fila de totales mensuales con A (críticos), B (medios), C (básicos)
-        # Patrón: % CUIDADOS CRÍTICOS / MEDIOS / BÁSICOS
-        if '% CUIDADOS CR' in row_str or 'CUIDADOS CR' in row_str:
+
+        if 'RESUMEN DIARIO' in row_str:
+            # La siguiente fila tiene los números
+            if i + 1 < len(rows):
+                next_row = rows[i + 1]
+                print(f"    Fila RESUMEN DIARIO encontrada en {i}, siguiente: {next_row}")
+
+        if '% CUIDADOS CR' in row_str or ('CUIDADOS CR' in row_str and '%' in row_str):
             for cell in row:
                 cell_s = str(cell).strip().replace('%','').replace(',','.')
                 try:
@@ -209,8 +164,8 @@ def get_cudyr_via_sheets_api(token, file_id):
                         criticos_pct = round(val, 1)
                         break
                 except: pass
-        
-        if '% CUIDADOS ME' in row_str or ('CUIDADOS ME' in row_str and 'CR' not in row_str):
+
+        if ('% CUIDADOS ME' in row_str or 'CUIDADOS MEDIOS' in row_str) and 'CR' not in row_str:
             for cell in row:
                 cell_s = str(cell).strip().replace('%','').replace(',','.')
                 try:
@@ -220,7 +175,7 @@ def get_cudyr_via_sheets_api(token, file_id):
                         break
                 except: pass
 
-        if '% CUIDADOS BÁ' in row_str or '% CUIDADOS BA' in row_str or 'CUIDADOS BÁS' in row_str:
+        if '% CUIDADOS BÁ' in row_str or '% CUIDADOS BA' in row_str or 'CUIDADOS BÁSICOS' in row_str or 'CUIDADOS BASICOS' in row_str:
             for cell in row:
                 cell_s = str(cell).strip().replace('%','').replace(',','.')
                 try:
@@ -230,7 +185,7 @@ def get_cudyr_via_sheets_api(token, file_id):
                         break
                 except: pass
 
-        # Buscar totales de días por categoría (fila TOTAL con números grandes)
+        # Buscar fila con totales de días por categoría
         if 'TOTAL' in row_str and len(row) > 5:
             nums = []
             for cell in row:
@@ -240,33 +195,33 @@ def get_cudyr_via_sheets_api(token, file_id):
                         nums.append(v)
                 except: pass
             if len(nums) >= 3:
-                # A=críticos, B=medios, C=básicos
-                criticos_dias = nums[0] if len(nums) > 0 else 0
-                medios_dias   = nums[1] if len(nums) > 1 else 0
-                basicos_dias  = nums[2] if len(nums) > 2 else 0
+                criticos_dias = nums[0]
+                medios_dias   = nums[1]
+                basicos_dias  = nums[2]
                 total_dias    = sum(nums[:3])
+                print(f"    Totales encontrados: C={criticos_dias} M={medios_dias} B={basicos_dias}")
 
-    # Si no encontramos porcentajes calculados, los calculamos nosotros
+    # Calcular porcentajes si no vienen calculados
     if criticos_pct is None and total_dias > 0:
         criticos_pct = round(criticos_dias / total_dias * 100, 1)
         medios_pct   = round(medios_dias   / total_dias * 100, 1)
         basicos_pct  = round(basicos_dias  / total_dias * 100, 1)
 
     if criticos_pct is None:
+        print(f"    ⚠ No se pudieron calcular porcentajes")
         return None
 
     return {
-        "criticos_pct": criticos_pct,
-        "medios_pct":   medios_pct   or 0,
-        "basicos_pct":  basicos_pct  or 0,
-        "total_dias":   total_dias,
+        "criticos_pct":  criticos_pct,
+        "medios_pct":    medios_pct or 0,
+        "basicos_pct":   basicos_pct or 0,
+        "total_dias":    total_dias,
         "criticos_dias": criticos_dias,
         "medios_dias":   medios_dias,
         "basicos_dias":  basicos_dias,
     }
 
 def extract_month_from_name(name):
-    """Extrae el mes del nombre del archivo CUDYR"""
     name_lower = name.lower()
     for mes, num in MESES_ES.items():
         if mes in name_lower:
@@ -274,17 +229,15 @@ def extract_month_from_name(name):
     return None, None
 
 def fetch_cudyr_data(g_token):
-    """Lee todos los archivos CUDYR 2026 y extrae los datos de TOTAL MENSUAL"""
     print("  Listando archivos CUDYR 2026...")
     files = list_drive_files(g_token, CUDYR_2026_FOLDER)
     print(f"  → {len(files)} archivos encontrados")
-    
+
     cudyr = {}
     for f in files:
         mes_nombre, mes_num = extract_month_from_name(f["name"])
         if not mes_nombre:
             continue
-        
         print(f"  Procesando CUDYR {mes_nombre}...")
         datos = get_cudyr_via_sheets_api(g_token, f["id"])
         if datos:
@@ -292,12 +245,9 @@ def fetch_cudyr_data(g_token):
             print(f"  → Críticos: {datos['criticos_pct']}% | Medios: {datos['medios_pct']}% | Básicos: {datos['basicos_pct']}%")
         else:
             print(f"  ⚠ No se pudieron extraer datos de {f['name']}")
-    
+
     return cudyr
 
-# ══════════════════════════════════════════════════════════════════════
-# CENSO — parsear meses del Excel SharePoint
-# ══════════════════════════════════════════════════════════════════════
 def parse_mes(ws):
     datos_diarios = []
     dotacion = 29
@@ -350,9 +300,9 @@ def parse_mes(ws):
     if not datos_diarios:
         return None
 
-    total_ingresos  = sum(d["total_ingresos"] for d in datos_diarios)
-    total_egresos   = sum(d["total_egresos"] for d in datos_diarios)
-    total_fallecidos= sum(d["egr_fallecidos"] for d in datos_diarios)
+    total_ingresos   = sum(d["total_ingresos"] for d in datos_diarios)
+    total_egresos    = sum(d["total_egresos"] for d in datos_diarios)
+    total_fallecidos = sum(d["egr_fallecidos"] for d in datos_diarios)
     total_dias_estada= sum(d["dias_estada"] for d in datos_diarios)
     dias = len(datos_diarios)
     ocup_prom = round(sum(d["camas_ocupadas"] for d in datos_diarios)/dias, 1) if dias else 0
@@ -424,9 +374,6 @@ def parse_sociosanitarios(ws):
     casos.sort(key=lambda x: x["dias_hospitalizados"] or 0, reverse=True)
     return casos
 
-# ══════════════════════════════════════════════════════════════════════
-# MAIN
-# ══════════════════════════════════════════════════════════════════════
 def main():
     print("─── Microsoft / SharePoint ───")
     print("Obteniendo token MS...")
@@ -447,32 +394,4 @@ def main():
         nombre_upper = sheet_name.strip().upper()
         if nombre_upper in MESES_VALIDOS:
             print(f"  Procesando mes: {sheet_name}")
-            datos = parse_mes(wb[sheet_name])
-            if datos:
-                resultado["meses"][nombre_upper] = datos
-        elif nombre_upper == "DATOS":
-            print("  Procesando casos sociosanitarios...")
-            casos = parse_sociosanitarios(wb[sheet_name])
-            resultado["sociosanitarios"] = casos
-            print(f"  → {len(casos)} casos FIJO")
-
-    print("\n─── Google Drive / CUDYR ───")
-    try:
-        g_token = get_google_token()
-        cudyr = fetch_cudyr_data(g_token)
-        resultado["cudyr"] = cudyr
-        print(f"✓ CUDYR: {list(cudyr.keys())}")
-    except Exception as e:
-        print(f"⚠ Error CUDYR: {e}")
-        resultado["cudyr"] = {}
-
-    os.makedirs("data", exist_ok=True)
-    with open("data/censo.json", "w", encoding="utf-8") as f:
-        json.dump(resultado, f, ensure_ascii=False, indent=2)
-
-    print(f"\n✓ Listo. Meses censo: {list(resultado['meses'].keys())}")
-    print(f"✓ Casos sociosanitarios: {len(resultado['sociosanitarios'])}")
-    print(f"✓ CUDYR meses: {list(resultado['cudyr'].keys())}")
-
-if __name__ == "__main__":
-    main()
+            datos = parse_mes(wb[sheet_name]
