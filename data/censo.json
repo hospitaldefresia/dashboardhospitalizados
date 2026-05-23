@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-05-22 15:59",
+  "actualizado": "2026-05-23 11:00",
   "meses": {
     "MARZO": {
       "dias": [
@@ -2390,7 +2390,7 @@
       "rut": "4934239-K",
       "edad": "",
       "fecha_ingreso": "25/05/2021",
-      "dias_hospitalizados": 1823,
+      "dias_hospitalizados": 1824,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -2401,7 +2401,7 @@
       "rut": "4270581-0",
       "edad": "",
       "fecha_ingreso": "14/12/2022",
-      "dias_hospitalizados": 1255,
+      "dias_hospitalizados": 1256,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -2412,7 +2412,7 @@
       "rut": "9545710-K",
       "edad": "",
       "fecha_ingreso": "29/12/2024",
-      "dias_hospitalizados": 509,
+      "dias_hospitalizados": 510,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -2423,7 +2423,7 @@
       "rut": "1116339-1",
       "edad": "",
       "fecha_ingreso": "21/11/2025",
-      "dias_hospitalizados": 182,
+      "dias_hospitalizados": 183,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -2434,7 +2434,7 @@
       "rut": "4171531-6",
       "edad": "",
       "fecha_ingreso": "24/11/2025",
-      "dias_hospitalizados": 179,
+      "dias_hospitalizados": 180,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -2445,7 +2445,7 @@
       "rut": "12538744-6",
       "edad": "",
       "fecha_ingreso": "09/02/2026",
-      "dias_hospitalizados": 102,
+      "dias_hospitalizados": 103,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -2456,7 +2456,7 @@
       "rut": "5051730-6",
       "edad": "",
       "fecha_ingreso": "28/02/2026",
-      "dias_hospitalizados": 83,
+      "dias_hospitalizados": 84,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -2465,13 +2465,13 @@
   ],
   "cudyr": {
     "MAYO": {
-      "criticos_pct": 1.9,
-      "medios_pct": 76.4,
-      "basicos_pct": 21.7,
-      "total_dias": 424,
-      "criticos_dias": 8,
-      "medios_dias": 324,
-      "basicos_dias": 92
+      "criticos_pct": 2.0,
+      "medios_pct": 76.1,
+      "basicos_pct": 21.9,
+      "total_dias": 443,
+      "criticos_dias": 9,
+      "medios_dias": 337,
+      "basicos_dias": 97
     },
     "ABRIL": {
       "criticos_pct": 3.0,
