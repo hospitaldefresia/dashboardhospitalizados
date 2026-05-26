@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-05-25 16:06",
+  "actualizado": "2026-05-26 17:48",
   "meses": {
     "MARZO": {
       "dias": [
@@ -2390,7 +2390,7 @@
       "rut": "4934239-K",
       "edad": "",
       "fecha_ingreso": "25/05/2021",
-      "dias_hospitalizados": 1826,
+      "dias_hospitalizados": 1827,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -2401,7 +2401,7 @@
       "rut": "4270581-0",
       "edad": "",
       "fecha_ingreso": "14/12/2022",
-      "dias_hospitalizados": 1258,
+      "dias_hospitalizados": 1259,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -2412,7 +2412,7 @@
       "rut": "9545710-K",
       "edad": "",
       "fecha_ingreso": "29/12/2024",
-      "dias_hospitalizados": 512,
+      "dias_hospitalizados": 513,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -2423,7 +2423,7 @@
       "rut": "1116339-1",
       "edad": "",
       "fecha_ingreso": "21/11/2025",
-      "dias_hospitalizados": 185,
+      "dias_hospitalizados": 186,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -2434,7 +2434,7 @@
       "rut": "4171531-6",
       "edad": "",
       "fecha_ingreso": "24/11/2025",
-      "dias_hospitalizados": 182,
+      "dias_hospitalizados": 183,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -2445,7 +2445,7 @@
       "rut": "12538744-6",
       "edad": "",
       "fecha_ingreso": "09/02/2026",
-      "dias_hospitalizados": 105,
+      "dias_hospitalizados": 106,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -2456,58 +2456,12 @@
       "rut": "5051730-6",
       "edad": "",
       "fecha_ingreso": "28/02/2026",
-      "dias_hospitalizados": 86,
+      "dias_hospitalizados": 87,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
       "prevision": ""
     }
   ],
-  "cudyr": {
-    "MAYO": {
-      "criticos_pct": 2.1,
-      "medios_pct": 75.4,
-      "basicos_pct": 22.6,
-      "total_dias": 483,
-      "criticos_dias": 10,
-      "medios_dias": 364,
-      "basicos_dias": 109
-    },
-    "ABRIL": {
-      "criticos_pct": 3.0,
-      "medios_pct": 75.2,
-      "basicos_pct": 21.9,
-      "total_dias": 640,
-      "criticos_dias": 19,
-      "medios_dias": 481,
-      "basicos_dias": 140
-    },
-    "MARZO": {
-      "criticos_pct": 3.1,
-      "medios_pct": 75.6,
-      "basicos_pct": 21.3,
-      "total_dias": 521,
-      "criticos_dias": 16,
-      "medios_dias": 394,
-      "basicos_dias": 111
-    },
-    "FEBRERO": {
-      "criticos_pct": 4.8,
-      "medios_pct": 71.3,
-      "basicos_pct": 23.8,
-      "total_dias": 516,
-      "criticos_dias": 25,
-      "medios_dias": 368,
-      "basicos_dias": 123
-    },
-    "ENERO": {
-      "criticos_pct": 1.8,
-      "medios_pct": 76.1,
-      "basicos_pct": 22.0,
-      "total_dias": 658,
-      "criticos_dias": 12,
-      "medios_dias": 501,
-      "basicos_dias": 145
-    }
-  }
+  "cudyr": {}
 }
