@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-07-08 08:22",
+  "actualizado": "2026-07-09 09:38",
   "meses": {
     "MARZO": {
       "dias": [
@@ -2353,32 +2353,32 @@
         {
           "fecha": "2026-06-30",
           "existencia": 19,
-          "ing_urgencia": 0,
+          "ing_urgencia": 2,
           "ing_aps": 0,
           "ing_cae": 0,
           "ing_otros_hosp": 0,
           "ing_otra_proc": 0,
           "ing_mismo_serv": 0,
-          "total_ingresos": 0,
+          "total_ingresos": 2,
           "egr_alta": 0,
           "egr_traslado": 0,
           "egr_fallecidos": 0,
           "total_egresos": 0,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 19,
-          "dias_estada": 0
+          "camas_ocupadas": 21,
+          "dias_estada": 2
         }
       ],
       "resumen": {
         "dotacion": 29,
-        "total_ingresos": 54,
+        "total_ingresos": 56,
         "total_egresos": 62,
         "total_fallecidos": 1,
-        "ocupacion_promedio": 20.7,
-        "porcentaje_ocupacion": 71.4,
+        "ocupacion_promedio": 20.8,
+        "porcentaje_ocupacion": 71.7,
         "estada_promedio": 10.6,
-        "ing_urgencia": 46,
+        "ing_urgencia": 48,
         "ing_aps": 0,
         "ing_otros_hosp": 8
       }
@@ -2402,7 +2402,7 @@
           "mismo_dia": 0,
           "camas_disponibles": 29,
           "camas_ocupadas": 1,
-          "dias_estada": 0
+          "dias_estada": 1
         },
         {
           "fecha": "2026-07-02",
@@ -2995,7 +2995,7 @@
       "rut": "4934239-K",
       "edad": "",
       "fecha_ingreso": "25/05/2021",
-      "dias_hospitalizados": 1870,
+      "dias_hospitalizados": 1871,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -3006,7 +3006,7 @@
       "rut": "4270581-0",
       "edad": "",
       "fecha_ingreso": "14/12/2022",
-      "dias_hospitalizados": 1302,
+      "dias_hospitalizados": 1303,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -3017,7 +3017,7 @@
       "rut": "9545710-K",
       "edad": "",
       "fecha_ingreso": "29/12/2024",
-      "dias_hospitalizados": 556,
+      "dias_hospitalizados": 557,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -3028,7 +3028,7 @@
       "rut": "1116339-1",
       "edad": "",
       "fecha_ingreso": "21/11/2025",
-      "dias_hospitalizados": 229,
+      "dias_hospitalizados": 230,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -3039,7 +3039,7 @@
       "rut": "12538744-6",
       "edad": "",
       "fecha_ingreso": "09/02/2026",
-      "dias_hospitalizados": 149,
+      "dias_hospitalizados": 150,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -3050,7 +3050,7 @@
       "rut": "5051730-6",
       "edad": "",
       "fecha_ingreso": "28/02/2026",
-      "dias_hospitalizados": 130,
+      "dias_hospitalizados": 131,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
