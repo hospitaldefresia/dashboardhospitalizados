@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-08-07 07:09",
+  "actualizado": "2026-08-08 06:45",
   "meses": {
     "MARZO": {
       "dias": [
@@ -1273,25 +1273,25 @@
         {
           "fecha": "2026-05-05",
           "existencia": 24,
-          "ing_urgencia": 2,
+          "ing_urgencia": 3,
           "ing_aps": 0,
           "ing_cae": 0,
           "ing_otros_hosp": 0,
           "ing_otra_proc": 0,
           "ing_mismo_serv": 0,
-          "total_ingresos": 2,
+          "total_ingresos": 3,
           "egr_alta": 4,
           "egr_traslado": 0,
           "egr_fallecidos": 0,
           "total_egresos": 4,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 22,
+          "camas_ocupadas": 23,
           "dias_estada": 20
         },
         {
           "fecha": "2026-05-06",
-          "existencia": 22,
+          "existencia": 23,
           "ing_urgencia": 2,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1305,12 +1305,12 @@
           "total_egresos": 7,
           "mismo_dia": 1,
           "camas_disponibles": 29,
-          "camas_ocupadas": 18,
+          "camas_ocupadas": 19,
           "dias_estada": 61
         },
         {
           "fecha": "2026-05-07",
-          "existencia": 18,
+          "existencia": 19,
           "ing_urgencia": 3,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1324,12 +1324,12 @@
           "total_egresos": 2,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 20,
+          "camas_ocupadas": 21,
           "dias_estada": 7
         },
         {
           "fecha": "2026-05-08",
-          "existencia": 20,
+          "existencia": 21,
           "ing_urgencia": 0,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1343,12 +1343,12 @@
           "total_egresos": 2,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 20,
+          "camas_ocupadas": 21,
           "dias_estada": 6
         },
         {
           "fecha": "2026-05-09",
-          "existencia": 20,
+          "existencia": 21,
           "ing_urgencia": 1,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1362,12 +1362,12 @@
           "total_egresos": 1,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 20,
+          "camas_ocupadas": 21,
           "dias_estada": 7
         },
         {
           "fecha": "2026-05-10",
-          "existencia": 20,
+          "existencia": 21,
           "ing_urgencia": 3,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1381,12 +1381,12 @@
           "total_egresos": 0,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 24,
+          "camas_ocupadas": 25,
           "dias_estada": 0
         },
         {
           "fecha": "2026-05-11",
-          "existencia": 24,
+          "existencia": 25,
           "ing_urgencia": 3,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1400,12 +1400,12 @@
           "total_egresos": 3,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 27,
+          "camas_ocupadas": 28,
           "dias_estada": 26
         },
         {
           "fecha": "2026-05-12",
-          "existencia": 27,
+          "existencia": 28,
           "ing_urgencia": 1,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1419,12 +1419,12 @@
           "total_egresos": 3,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 27,
+          "camas_ocupadas": 28,
           "dias_estada": 14
         },
         {
           "fecha": "2026-05-13",
-          "existencia": 27,
+          "existencia": 28,
           "ing_urgencia": 0,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1438,12 +1438,12 @@
           "total_egresos": 5,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 22,
+          "camas_ocupadas": 23,
           "dias_estada": 33
         },
         {
           "fecha": "2026-05-14",
-          "existencia": 22,
+          "existencia": 23,
           "ing_urgencia": 5,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1457,12 +1457,12 @@
           "total_egresos": 5,
           "mismo_dia": 1,
           "camas_disponibles": 29,
-          "camas_ocupadas": 23,
+          "camas_ocupadas": 24,
           "dias_estada": 21
         },
         {
           "fecha": "2026-05-15",
-          "existencia": 23,
+          "existencia": 24,
           "ing_urgencia": 1,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1476,12 +1476,12 @@
           "total_egresos": 2,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 23,
+          "camas_ocupadas": 24,
           "dias_estada": 11
         },
         {
           "fecha": "2026-05-16",
-          "existencia": 23,
+          "existencia": 24,
           "ing_urgencia": 2,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1495,12 +1495,12 @@
           "total_egresos": 2,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 23,
+          "camas_ocupadas": 24,
           "dias_estada": 8
         },
         {
           "fecha": "2026-05-17",
-          "existencia": 23,
+          "existencia": 24,
           "ing_urgencia": 1,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1514,12 +1514,12 @@
           "total_egresos": 0,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 24,
+          "camas_ocupadas": 25,
           "dias_estada": 0
         },
         {
           "fecha": "2026-05-18",
-          "existencia": 24,
+          "existencia": 25,
           "ing_urgencia": 4,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1533,12 +1533,12 @@
           "total_egresos": 2,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 26,
+          "camas_ocupadas": 27,
           "dias_estada": 17
         },
         {
           "fecha": "2026-05-19",
-          "existencia": 26,
+          "existencia": 27,
           "ing_urgencia": 1,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1552,12 +1552,12 @@
           "total_egresos": 5,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 23,
+          "camas_ocupadas": 24,
           "dias_estada": 27
         },
         {
           "fecha": "2026-05-20",
-          "existencia": 23,
+          "existencia": 24,
           "ing_urgencia": 0,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1571,12 +1571,12 @@
           "total_egresos": 3,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 20,
+          "camas_ocupadas": 21,
           "dias_estada": 22
         },
         {
           "fecha": "2026-05-21",
-          "existencia": 20,
+          "existencia": 21,
           "ing_urgencia": 2,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1590,12 +1590,12 @@
           "total_egresos": 0,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 22,
+          "camas_ocupadas": 23,
           "dias_estada": 0
         },
         {
           "fecha": "2026-05-22",
-          "existencia": 22,
+          "existencia": 23,
           "ing_urgencia": 0,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1609,12 +1609,12 @@
           "total_egresos": 2,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 21,
+          "camas_ocupadas": 22,
           "dias_estada": 16
         },
         {
           "fecha": "2026-05-23",
-          "existencia": 21,
+          "existencia": 22,
           "ing_urgencia": 1,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1628,12 +1628,12 @@
           "total_egresos": 1,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 21,
+          "camas_ocupadas": 22,
           "dias_estada": 6
         },
         {
           "fecha": "2026-05-24",
-          "existencia": 21,
+          "existencia": 22,
           "ing_urgencia": 2,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1647,12 +1647,12 @@
           "total_egresos": 1,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 23,
+          "camas_ocupadas": 24,
           "dias_estada": 5
         },
         {
           "fecha": "2026-05-25",
-          "existencia": 23,
+          "existencia": 24,
           "ing_urgencia": 1,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1666,12 +1666,12 @@
           "total_egresos": 4,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 20,
+          "camas_ocupadas": 21,
           "dias_estada": 22
         },
         {
           "fecha": "2026-05-26",
-          "existencia": 20,
+          "existencia": 21,
           "ing_urgencia": 4,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1685,12 +1685,12 @@
           "total_egresos": 0,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 26,
+          "camas_ocupadas": 27,
           "dias_estada": 0
         },
         {
           "fecha": "2026-05-27",
-          "existencia": 26,
+          "existencia": 27,
           "ing_urgencia": 0,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1704,12 +1704,12 @@
           "total_egresos": 2,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 24,
+          "camas_ocupadas": 25,
           "dias_estada": 9
         },
         {
           "fecha": "2026-05-28",
-          "existencia": 24,
+          "existencia": 25,
           "ing_urgencia": 3,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1723,12 +1723,12 @@
           "total_egresos": 3,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 25,
+          "camas_ocupadas": 26,
           "dias_estada": 11
         },
         {
           "fecha": "2026-05-29",
-          "existencia": 25,
+          "existencia": 26,
           "ing_urgencia": 0,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1742,12 +1742,12 @@
           "total_egresos": 4,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 23,
+          "camas_ocupadas": 24,
           "dias_estada": 40
         },
         {
           "fecha": "2026-05-30",
-          "existencia": 23,
+          "existencia": 24,
           "ing_urgencia": 3,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1761,12 +1761,12 @@
           "total_egresos": 0,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 26,
+          "camas_ocupadas": 27,
           "dias_estada": 0
         },
         {
           "fecha": "2026-05-31",
-          "existencia": 26,
+          "existencia": 27,
           "ing_urgencia": 2,
           "ing_aps": 0,
           "ing_cae": 0,
@@ -1780,19 +1780,19 @@
           "total_egresos": 1,
           "mismo_dia": 0,
           "camas_disponibles": 29,
-          "camas_ocupadas": 27,
+          "camas_ocupadas": 28,
           "dias_estada": 1
         }
       ],
       "resumen": {
         "dotacion": 29,
-        "total_ingresos": 76,
+        "total_ingresos": 77,
         "total_egresos": 68,
         "total_fallecidos": 2,
-        "ocupacion_promedio": 23.0,
-        "porcentaje_ocupacion": 79.3,
+        "ocupacion_promedio": 23.9,
+        "porcentaje_ocupacion": 82.4,
         "estada_promedio": 5.9,
-        "ing_urgencia": 54,
+        "ing_urgencia": 55,
         "ing_aps": 0,
         "ing_otros_hosp": 22
       }
@@ -2402,7 +2402,7 @@
           "mismo_dia": 0,
           "camas_disponibles": 29,
           "camas_ocupadas": 1,
-          "dias_estada": 1
+          "dias_estada": 124
         },
         {
           "fecha": "2026-07-02",
@@ -2995,7 +2995,7 @@
       "rut": "4934239-K",
       "edad": "",
       "fecha_ingreso": "25/05/2021",
-      "dias_hospitalizados": 1900,
+      "dias_hospitalizados": 1901,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -3006,7 +3006,7 @@
       "rut": "4270581-0",
       "edad": "",
       "fecha_ingreso": "14/12/2022",
-      "dias_hospitalizados": 1332,
+      "dias_hospitalizados": 1333,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -3017,7 +3017,7 @@
       "rut": "9545710-K",
       "edad": "",
       "fecha_ingreso": "29/12/2024",
-      "dias_hospitalizados": 586,
+      "dias_hospitalizados": 587,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -3028,7 +3028,7 @@
       "rut": "1116339-1",
       "edad": "",
       "fecha_ingreso": "21/11/2025",
-      "dias_hospitalizados": 259,
+      "dias_hospitalizados": 260,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -3039,18 +3039,7 @@
       "rut": "12538744-6",
       "edad": "",
       "fecha_ingreso": "09/02/2026",
-      "dias_hospitalizados": 179,
-      "sala": "",
-      "cama": "",
-      "procedencia": "4:OTRO ESTABLECIMIENTO",
-      "prevision": ""
-    },
-    {
-      "nombre": "JOSE MARTIN OJEDA LEVINERI",
-      "rut": "5051730-6",
-      "edad": "",
-      "fecha_ingreso": "28/02/2026",
-      "dias_hospitalizados": 160,
+      "dias_hospitalizados": 180,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
