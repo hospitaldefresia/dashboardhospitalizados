@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-09-09 10:43",
+  "actualizado": "2026-09-10 10:32",
   "meses": {
     "MARZO": {
       "dias": [
@@ -2364,10 +2364,10 @@
           "egr_traslado": 0,
           "egr_fallecidos": 0,
           "total_egresos": 0,
-          "mismo_dia": 0,
+          "mismo_dia": 1,
           "camas_disponibles": 29,
           "camas_ocupadas": 22,
-          "dias_estada": 2
+          "dias_estada": 3
         }
       ],
       "resumen": {
@@ -2421,7 +2421,7 @@
           "mismo_dia": 0,
           "camas_disponibles": 29,
           "camas_ocupadas": 2,
-          "dias_estada": 6
+          "dias_estada": 15
         },
         {
           "fecha": "2026-07-03",
@@ -2440,7 +2440,7 @@
           "mismo_dia": 0,
           "camas_disponibles": 29,
           "camas_ocupadas": 2,
-          "dias_estada": 0
+          "dias_estada": 10
         },
         {
           "fecha": "2026-07-04",
@@ -2497,7 +2497,7 @@
           "mismo_dia": 0,
           "camas_disponibles": 29,
           "camas_ocupadas": 2,
-          "dias_estada": 0
+          "dias_estada": 9
         },
         {
           "fecha": "2026-07-07",
@@ -2535,7 +2535,7 @@
           "mismo_dia": 0,
           "camas_disponibles": 29,
           "camas_ocupadas": 2,
-          "dias_estada": 0
+          "dias_estada": 14
         },
         {
           "fecha": "2026-07-09",
@@ -2649,7 +2649,7 @@
           "mismo_dia": 0,
           "camas_disponibles": 29,
           "camas_ocupadas": 2,
-          "dias_estada": 0
+          "dias_estada": 22
         },
         {
           "fecha": "2026-07-15",
@@ -2668,7 +2668,7 @@
           "mismo_dia": 0,
           "camas_disponibles": 29,
           "camas_ocupadas": 2,
-          "dias_estada": 0
+          "dias_estada": 21
         },
         {
           "fecha": "2026-07-16",
@@ -2763,7 +2763,7 @@
           "mismo_dia": 0,
           "camas_disponibles": 29,
           "camas_ocupadas": 2,
-          "dias_estada": 0
+          "dias_estada": 25
         },
         {
           "fecha": "2026-07-21",
@@ -2934,7 +2934,7 @@
           "mismo_dia": 0,
           "camas_disponibles": 29,
           "camas_ocupadas": 2,
-          "dias_estada": 0
+          "dias_estada": 29
         },
         {
           "fecha": "2026-07-30",
@@ -2995,7 +2995,7 @@
       "rut": "4934239-K",
       "edad": "",
       "fecha_ingreso": "25/05/2021",
-      "dias_hospitalizados": 1933,
+      "dias_hospitalizados": 1934,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -3006,7 +3006,7 @@
       "rut": "4270581-0",
       "edad": "",
       "fecha_ingreso": "14/12/2022",
-      "dias_hospitalizados": 1365,
+      "dias_hospitalizados": 1366,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -3017,7 +3017,7 @@
       "rut": "9545710-K",
       "edad": "",
       "fecha_ingreso": "29/12/2024",
-      "dias_hospitalizados": 619,
+      "dias_hospitalizados": 620,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -3028,7 +3028,7 @@
       "rut": "1116339-1",
       "edad": "",
       "fecha_ingreso": "21/11/2025",
-      "dias_hospitalizados": 292,
+      "dias_hospitalizados": 293,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
@@ -3039,7 +3039,7 @@
       "rut": "12538744-6",
       "edad": "",
       "fecha_ingreso": "09/02/2026",
-      "dias_hospitalizados": 212,
+      "dias_hospitalizados": 213,
       "sala": "",
       "cama": "",
       "procedencia": "4:OTRO ESTABLECIMIENTO",
